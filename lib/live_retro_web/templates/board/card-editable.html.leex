@@ -1,6 +1,8 @@
 <item>
   <form phx-submit="update" class="card  <%= color_for(@type) %> darken-1">
     <div class="card-content input-field">
+      <input type="hidden" name="id" value="<%= @id %>"></input>
+
       <input autofocus
              class="white-text"
              name="text"

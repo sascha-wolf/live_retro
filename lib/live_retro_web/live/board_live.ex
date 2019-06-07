@@ -2,35 +2,49 @@ defmodule LiveRetroWeb.BoardLive do
   use Phoenix.LiveView
 
   def render(assigns) do
-    IO.inspect(assigns)
     LiveRetroWeb.BoardView.render("index.html", assigns)
   end
 
   def mount(cards, socket) do
-    IO.puts("MOUNT")
+    cards = Enum.group_by(cards, & &1[:id])
 
-    by_type = Enum.group_by(cards, & &1[:type])
-
-    {:ok, assign(socket, cards_by_type: by_type)}
+    {:ok, assign(socket, cards: cards, create_new_for: nil)}
   end
 
   def handle_event("add", type, socket) do
     type = String.to_existing_atom(type)
 
-    {:noreply, update(socket, :cards_by_type, &add_card(&1, type))}
+    {:noreply, assign(socket, :create_new_for, type)}
   end
 
-  defp add_card(cards_by_type, type) do
-    card = new_card(type: type)
+  def handle_event("create", %{"text" => text, "type" => type}, socket) do
+    type = String.to_existing_atom(type)
+    card = new_card(text: text, type: type)
 
-    Map.update(cards_by_type, type, [card], &[card | &1])
+    socket =
+      socket
+      |> assign(:create_new_for, nil)
+      |> update(:cards, &add_card(&1, card))
+
+    {:noreply, socket}
   end
+
+  # def handle_event("edit", id, socket) do
+  #   {:noreply, assign(socket, :editable, true)}
+  # end
+
+  # def handle_event("update", %{"text" => text}, socket) do
+  #   {:noreply, assign(socket, text: text, editable: false)}
+  # end
 
   defp new_card(props) do
     Enum.into(props, %{
       id: UUID.uuid4(),
-      text: "",
-      editable: true
+      created_at: NaiveDateTime.utc_now() |> NaiveDateTime.to_erl()
     })
+  end
+
+  defp add_card(cards_by_type, card) do
+    Map.update(cards_by_type, card[:type], [card], &[card | &1])
   end
 end

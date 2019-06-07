@@ -1,0 +1,13 @@
+<item>
+  <form phx-submit="create" class="card  <%= color_for(@type) %> darken-1">
+    <div class="card-content input-field">
+      <input type="hidden" name="type" value="<%= @type %>"></input>
+
+      <input autofocus
+             class="white-text"
+             name="text"
+             placeholder="Enter text ...">
+      </input>
+    </div>
+  </form>
+</item>

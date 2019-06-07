@@ -1,18 +1,22 @@
 <div class="row">
-  <%= for column_type <- column_types() do %>
+  <%= for column <- as_columns(@cards) do %>
     <section>
       <div class="col s4">
-        <h5><%= title_for(column_type) %></h5>
+        <h5><%= column[:title] %></h5>
 
-        <a class="btn waves-effect waves-light <%= color_for(column_type) %>"
+        <a class="btn waves-effect waves-light <%= column[:color] %>"
            style="width: 100%"
            phx-click="add"
-           phx-value="<%= column_type %>">
+           phx-value="<%= column[:type] %>">
           Add Card
         </a>
 
-        <%= for card <- cards_for(column_type, from: @cards_by_type) do %>
-          <%= live_render(@socket, LiveRetroWeb.CardLive, session: card) %>
+        <%= if create_new?(@create_new_for, column) do %>
+          <%= render_new(@create_new_for) %>
+        <% end %>
+
+        <%= for card <- column[:cards] do %>
+          <%= render_card(card) %>
         <% end %>
       </div>
     </section>
