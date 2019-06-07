@@ -16,7 +16,7 @@
         <% end %>
 
         <%= for card <- column[:cards] do %>
-          <%= render_card(card, editable?: @editable == card[:id]) %>
+          <%= render_card(card, editable?: @editable == card.id) %>
         <% end %>
       </div>
     </section>
