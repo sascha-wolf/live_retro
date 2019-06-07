@@ -8,6 +8,7 @@ defmodule LiveRetro.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
+      LiveRetro.Board,
       # Start the endpoint when the application starts
       LiveRetroWeb.Endpoint
       # Starts a worker by calling: LiveRetro.Worker.start_link(arg)
