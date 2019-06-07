@@ -1,38 +1,45 @@
 defmodule LiveRetroWeb.CardsLive do
   use Phoenix.LiveView
 
-  @max_grid_size 12
-  @min_column_size 2
+  @column_order [:good, :bad, :action]
+  @column_names_by_type %{
+    good: "Went good 👍",
+    bad: "To improve 😩",
+    action: "Actions 😎"
+  }
 
-  def render(%{columns: columns} = assigns) do
-    column_size =
-      @max_grid_size
-      |> div(length(columns))
-      |> max(@min_column_size)
-
+  def render(assigns) do
     ~L"""
     <div class="row">
-      <%= for column <- @columns do %>
-        <%=
-          column
-          |> Map.put(:column_size, column_size)
-          |> render_column()
-        %>
+      <%= for column <- as_columns(@cards) do %>
+        <%= render_column(column) %>
       <% end %>
     </div>
     """
   end
 
+  defp as_columns(cards) do
+    grouped = Enum.group_by(cards, &Map.get(&1, :type))
+
+    for type <- @column_order do
+      %{
+        title: @column_names_by_type[type],
+        type: type,
+        cards: grouped[type]
+      }
+    end
+  end
+
   defp render_column(assigns) do
     ~L"""
     <section>
-      <div class="col s<%= @column_size %>">
+      <div class="col s4">
         <h5><%= @title %></h5>
 
         <a class="btn waves-effect waves-light green"
            style="width: 100%"
            phx-click="add"
-           phx-value="<%= @id %>">
+           phx-value="<%= @type %>">
           Add Card
         </a>
 
@@ -63,46 +70,29 @@ defmodule LiveRetroWeb.CardsLive do
   end
 
   def mount(_session, socket) do
-    columns = [
-      %{
-        id: "1",
-        title: "First Row!",
-        cards: []
-      },
-      %{
-        id: "2",
-        title: "Second Row!",
-        cards: []
-      },
-      %{
-        id: "3",
-        title: "Third Row!",
-        cards: []
-      }
+    cards = [
+      new_card(type: :good),
+      new_card(type: :bad),
+      new_card(type: :action)
     ]
 
-    {:ok, assign(socket, columns: columns)}
+    {:ok, assign(socket, cards: cards)}
   end
 
-  def handle_event("add", id, socket) do
-    {:noreply, update(socket, :columns, &add_card_to_column(&1, id))}
+  defp new_card(props) do
+    Enum.into(props, %{
+      id: UUID.uuid4(),
+      text: "I'm a new card"
+    })
+  end
+
+  def handle_event("add", type, socket) do
+    type = String.to_existing_atom(type)
+
+    {:noreply, update(socket, :cards, &[new_card(type: type) | &1])}
   end
 
   def handle_event("edit", _id, socket) do
     {:noreply, socket}
-  end
-
-  defp add_card_to_column(columns, id) when is_list(columns) do
-    Enum.map(columns, fn
-      %{id: ^id, cards: cards} = col -> %{col | cards: [new_card() | cards]}
-      other_col -> other_col
-    end)
-  end
-
-  defp new_card do
-    %{
-      id: UUID.uuid4(),
-      text: "I'm a new card"
-    }
   end
 end
