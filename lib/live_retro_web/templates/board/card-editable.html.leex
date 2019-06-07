@@ -3,11 +3,17 @@
     <div class="card-content input-field">
       <input type="hidden" name="id" value="<%= @id %>"></input>
 
-      <input autofocus
+      <input id="text-for-card-<%= @id %>"
+             style="border: none; box-shadow: none;"
              class="white-text"
              name="text"
              value="<%= @text %>">
       </input>
+
+      <!-- The only way to reliably focus on load -->
+      <script>
+        document.getElementById("text-for-card-<%= @id %>").focus()
+      </script>
     </div>
   </form>
 </item>

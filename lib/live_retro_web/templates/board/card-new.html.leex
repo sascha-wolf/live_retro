@@ -3,11 +3,17 @@
     <div class="card-content input-field">
       <input type="hidden" name="type" value="<%= @type %>"></input>
 
-      <input autofocus
+      <input id="text-for-new-card"
+             style="border: none; box-shadow: none;"
              class="white-text"
              name="text"
              placeholder="Enter text ...">
       </input>
+
+      <!-- The only way to reliably focus on load -->
+      <script>
+        document.getElementById("text-for-new-card").focus()
+      </script>
     </div>
   </form>
 </item>
