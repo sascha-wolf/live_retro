@@ -25,7 +25,7 @@ defmodule LiveRetroWeb.CardsLive do
       %{
         title: @column_names_by_type[type],
         type: type,
-        cards: grouped[type]
+        cards: grouped[type] || []
       }
     end
   end
@@ -51,7 +51,7 @@ defmodule LiveRetroWeb.CardsLive do
     """
   end
 
-  defp render_card(assigns) do
+  defp render_card(%{editable: false} = assigns) do
     ~L"""
     <item>
       <div class="card blue darken-1">
@@ -69,20 +69,33 @@ defmodule LiveRetroWeb.CardsLive do
     """
   end
 
-  def mount(_session, socket) do
-    cards = [
-      new_card(type: :good),
-      new_card(type: :bad),
-      new_card(type: :action)
-    ]
+  defp render_card(%{editable: true} = assigns) do
+    ~L"""
+    <item>
+      <form phx-submit="update" class="card blue darken-1">
+        <div class="card-content input-field">
+          <input type="hidden" name="id" value="<%= @id %>"></input>
 
-    {:ok, assign(socket, cards: cards)}
+          <input autofocus
+                 class="white-text"
+                 name="text"
+                 value="<%= @text %>">
+          </input>
+        </div>
+      </form>
+    </item>
+    """
+  end
+
+  def mount(_session, socket) do
+    {:ok, assign(socket, cards: [])}
   end
 
   defp new_card(props) do
     Enum.into(props, %{
       id: UUID.uuid4(),
-      text: "I'm a new card"
+      text: "",
+      editable: true
     })
   end
 
@@ -92,7 +105,25 @@ defmodule LiveRetroWeb.CardsLive do
     {:noreply, update(socket, :cards, &[new_card(type: type) | &1])}
   end
 
-  def handle_event("edit", _id, socket) do
-    {:noreply, socket}
+  def handle_event("edit", id, socket) do
+    {:noreply, update(socket, :cards, &make_card_editable(&1, id))}
+  end
+
+  def handle_event("update", %{"id" => id, "text" => text}, socket) do
+    {:noreply, update(socket, :cards, &update_card(&1, id, text))}
+  end
+
+  defp make_card_editable(cards, id) do
+    Enum.map(cards, fn card ->
+      %{card | editable: id == card[:id]}
+    end)
+  end
+
+  defp update_card([%{id: id} = card | cards], id, text) do
+    [%{card | text: text, editable: false} | cards]
+  end
+
+  defp update_card([other_card | cards], id, text) do
+    [other_card | update_card(cards, id, text)]
   end
 end
