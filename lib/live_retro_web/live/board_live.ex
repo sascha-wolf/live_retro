@@ -9,8 +9,10 @@ defmodule LiveRetroWeb.BoardLive do
     LiveRetroWeb.BoardView.render("index.html", assigns)
   end
 
-  def mount(cards, socket) do
+  def mount(_, socket) do
     if connected?(socket), do: LiveRetroWeb.Endpoint.subscribe("cards")
+
+    cards = Board.all_cards()
 
     {:ok, assign(socket, cards: cards, create_new_for: nil, editable: nil)}
   end

@@ -4,9 +4,7 @@ defmodule LiveRetroWeb.BoardController do
   alias LiveRetro.Board
   alias LiveRetroWeb.BoardLive
 
-  def index(conn, _params) do
-    cards = Board.all_cards()
-
-    live_render(conn, BoardLive, session: cards)
+  def index(conn, %{"id" => id}) do
+    live_render(conn, BoardLive, session: id)
   end
 end
