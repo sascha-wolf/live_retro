@@ -52,11 +52,11 @@ config :live_retro, LiveRetroWeb.Endpoint,
 config :live_retro, LiveRetroWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/(?!.#).*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/(?!.#).*(po)$",
-      ~r"lib/live_retro_web/{live,views}/(?!.#).*(ex)$",
-      ~r"lib/live_retro_web/templates/(?!.#).*(eex)$",
-      ~r{lib/live_retro_web/live/(?!.#).*(ex)$}
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/gettext/.*(po)$",
+      ~r"lib/live_retro_web/{live,views}/.*(ex)$",
+      ~r"lib/live_retro_web/templates/.*(eex)$",
+      ~r{lib/live_retro_web/live/.*(ex)$}
     ]
   ]
 
