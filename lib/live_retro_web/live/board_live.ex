@@ -25,6 +25,7 @@ defmodule LiveRetroWeb.BoardLive do
 
   def handle_event("create", %{"text" => text, "type" => type}, socket) do
     board = socket.assigns[:board]
+    text = String.trim(text)
     type = String.to_existing_atom(type)
     card = Card.new(text: text, type: type)
 
@@ -42,6 +43,7 @@ defmodule LiveRetroWeb.BoardLive do
 
   def handle_event("update", %{"id" => id, "text" => text}, socket) do
     board = socket.assigns[:board]
+    text = String.trim(text)
 
     socket =
       socket

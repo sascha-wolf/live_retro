@@ -3,16 +3,39 @@
     <div class="card-content input-field">
       <input type="hidden" name="type" value="<%= @type %>"></input>
 
-      <input id="text-for-new-card"
-             style="border: none; box-shadow: none;"
-             class="white-text"
-             name="text"
-             placeholder="Enter text ...">
-      </input>
+      <textarea id="text-for-new-card"
+                style="border: none; box-shadow: none;"
+                onkeypress="submitOnShiftEnter(event)"
+                class="materialize-textarea white-text"
+                name="text"
+                rows="1"
+                placeholder="Enter text ...">
+      </textarea>
 
-      <!-- The only way to reliably focus on load -->
+      <button id="submit" type="submit" class="btn btn-small black-text white">
+        Save
+      </button>
+
       <script>
-        document.getElementById("text-for-new-card").focus()
+        var textarea = document.getElementById("text-for-new-card")
+
+        // The only way to reliably focus on load
+        textarea.focus()
+        resizeToFit(textarea)
+
+        function resizeToFit(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        // Used in 'onkeypress' above
+        function submitOnShiftEnter(event) {
+            if (event.keyCode != 13 || !event.shiftKey) {
+                return
+            }
+
+            document.getElementById("submit").click()
+        }
       </script>
     </div>
   </form>

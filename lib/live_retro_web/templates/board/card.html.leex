@@ -1,13 +1,9 @@
 <item>
   <div class="card <%= color_for(@type) %> darken-1">
-    <div class="card-content white-text">
-      <%= @text %>
-    </div>
-
-    <div class="card-action">
-      <a href="#" phx-click="edit" phx-value="<%= @id %>">
-        Edit
-      </a>
-    </div>
+    <a href="#" phx-click="edit" phx-value="<%= @id %>">
+      <div class="card-content white-text">
+        <p style="white-space: pre;"><%= @text %></p>
+      </div>
+    </a>
   </div>
 </item>
