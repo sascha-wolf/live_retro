@@ -51,6 +51,12 @@ defmodule LiveRetroWeb.CardsLive do
         <div class="card-content white-text">
           <%= @text %>
         </div>
+
+        <div class="card-action">
+          <a href="#" phx-click="edit" phx-value="<%= @id %>">
+            Edit
+          </a>
+        </div>
       </div>
     </item>
     """
@@ -61,24 +67,17 @@ defmodule LiveRetroWeb.CardsLive do
       %{
         id: "1",
         title: "First Row!",
-        cards: [
-          %{text: "Hello, I am a card!"},
-          %{text: "Hello, I am a card!"}
-        ]
+        cards: []
       },
       %{
         id: "2",
         title: "Second Row!",
-        cards: [
-          %{text: "Hello, I am a card!"}
-        ]
+        cards: []
       },
       %{
         id: "3",
         title: "Third Row!",
-        cards: [
-          %{text: "Hello, I am a card!"}
-        ]
+        cards: []
       }
     ]
 
@@ -89,6 +88,10 @@ defmodule LiveRetroWeb.CardsLive do
     {:noreply, update(socket, :columns, &add_card_to_column(&1, id))}
   end
 
+  def handle_event("edit", _id, socket) do
+    {:noreply, socket}
+  end
+
   defp add_card_to_column(columns, id) when is_list(columns) do
     Enum.map(columns, fn
       %{id: ^id, cards: cards} = col -> %{col | cards: [new_card() | cards]}
@@ -97,6 +100,9 @@ defmodule LiveRetroWeb.CardsLive do
   end
 
   defp new_card do
-    %{text: "I'm a new card"}
+    %{
+      id: UUID.uuid4(),
+      text: "I'm a new card"
+    }
   end
 end
