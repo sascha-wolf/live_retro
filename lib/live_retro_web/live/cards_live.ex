@@ -36,7 +36,7 @@ defmodule LiveRetroWeb.CardsLive do
       <div class="col s4">
         <h5><%= @title %></h5>
 
-        <a class="btn waves-effect waves-light green"
+        <a class="btn waves-effect waves-light <%= color_for(@type) %>"
            style="width: 100%"
            phx-click="add"
            phx-value="<%= @type %>">
@@ -54,7 +54,7 @@ defmodule LiveRetroWeb.CardsLive do
   defp render_card(%{editable: false} = assigns) do
     ~L"""
     <item>
-      <div class="card blue darken-1">
+      <div class="card <%= color_for(@type) %> darken-1">
         <div class="card-content white-text">
           <%= @text %>
         </div>
@@ -72,7 +72,7 @@ defmodule LiveRetroWeb.CardsLive do
   defp render_card(%{editable: true} = assigns) do
     ~L"""
     <item>
-      <form phx-submit="update" class="card blue darken-1">
+      <form phx-submit="update" class="card  <%= color_for(@type) %> darken-1">
         <div class="card-content input-field">
           <input type="hidden" name="id" value="<%= @id %>"></input>
 
@@ -86,6 +86,10 @@ defmodule LiveRetroWeb.CardsLive do
     </item>
     """
   end
+
+  defp color_for(:good), do: "green"
+  defp color_for(:bad), do: "red"
+  defp color_for(:action), do: "blue"
 
   def mount(_session, socket) do
     {:ok, assign(socket, cards: [])}
