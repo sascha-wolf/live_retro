@@ -36,9 +36,9 @@ defmodule LiveRetroWeb.BoardView do
     render("card-new.html", type: for_type)
   end
 
-  defp render_card(%{editable: true} = card) do
+  defp render_card(card, editable?: true) do
     render("card-editable.html", card)
   end
 
-  defp render_card(card), do: render("card.html", card)
+  defp render_card(card, _), do: render("card.html", card)
 end
