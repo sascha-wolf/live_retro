@@ -8,18 +8,23 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-          </ul>
-        </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
+    <nav class="amber lighten-1">
+      <div class="nav-wrapper">
+        <a class="center brand-logo" href="/">
+          LiveRetro
         </a>
-      </section>
-    </header>
+
+        <!-- powered by Phoenix -->
+        <span class="hide-on-small-only">
+          <a class="brand-logo right phx-logo-text" href="https://phoenixframework.org/">
+            powered by
+          </a>
+        </span>
+        <a class="brand-logo right phx-logo" href="https://phoenixframework.org/">
+          <img src="<%= Routes.static_path(@conn, "/images/phoenix-only.png") %>" alt="Phoenix Framework Logo"/>
+        </a>
+      </div>
+    </nav>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>

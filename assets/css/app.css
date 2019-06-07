@@ -1,4 +1,18 @@
 /* This file is for your main application css. */
 
-@import "./phoenix.css";
+@import "./materialize.min.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
+
+
+.phx-logo-text {
+    font-size: 1.3rem !important;
+    margin-right: 85px;
+}
+
+.phx-logo {
+    height: 100%;
+}
+.phx-logo img {
+    height: 90%;
+    margin-top: 4px;
+}

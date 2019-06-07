@@ -3,6 +3,9 @@
 // its own CSS file.
 import css from "../css/app.css"
 
+// Import Materialize
+import materialize from "./materialize.min"
+
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured
 // in "webpack.config.js".
