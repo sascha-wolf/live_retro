@@ -7,10 +7,17 @@ defmodule LiveRetro.Board do
     match?({:ok, _}, Registry.lookup(board))
   end
 
-  def new(board) do
+  def new(board \\ generate_name()) do
     with {:ok, _} <- Registry.new(board) do
-      :ok
+      {:ok, board}
     end
+  end
+
+  defp generate_name do
+    Mnemonic.generate()
+    |> String.split()
+    |> Enum.take(6)
+    |> Enum.join("-")
   end
 
   def all_cards(board) do

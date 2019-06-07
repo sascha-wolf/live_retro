@@ -17,8 +17,8 @@ defmodule LiveRetroWeb.Router do
   scope "/", LiveRetroWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-    get "/board/:id", BoardController, :index
+    get "/", BoardController, :create
+    get "/board/:id", BoardController, :show
   end
 
   # Other scopes may use custom stacks.

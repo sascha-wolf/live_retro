@@ -4,7 +4,13 @@ defmodule LiveRetroWeb.BoardController do
   alias LiveRetro.Board
   alias LiveRetroWeb.BoardLive
 
-  def index(conn, %{"id" => id}) do
+  def create(conn, _) do
+    with {:ok, board} <- Board.new() do
+      redirect(conn, to: Routes.board_path(conn, :show, board))
+    end
+  end
+
+  def show(conn, %{"id" => id}) do
     if Board.exists?(id) do
       live_render(conn, BoardLive, session: id)
     else
