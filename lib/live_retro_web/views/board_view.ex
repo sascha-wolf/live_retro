@@ -8,7 +8,7 @@ defmodule LiveRetroWeb.BoardView do
       cards
       |> Map.values()
       |> List.flatten()
-      |> Enum.sort_by(&Map.get(&1, :created_at))
+      |> Enum.sort_by(&Map.get(&1, :created_at), &>=/2)
       |> Enum.group_by(&Map.get(&1, :type))
 
     for type <- @column_types do
