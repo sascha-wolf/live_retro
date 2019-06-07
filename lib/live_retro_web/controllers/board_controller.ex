@@ -5,6 +5,10 @@ defmodule LiveRetroWeb.BoardController do
   alias LiveRetroWeb.BoardLive
 
   def index(conn, %{"id" => id}) do
-    live_render(conn, BoardLive, session: id)
+    if Board.exists?(id) do
+      live_render(conn, BoardLive, session: id)
+    else
+      resp(conn, :not_found, "Not Found")
+    end
   end
 end

@@ -1,22 +1,30 @@
 defmodule LiveRetro.Board do
-  use Agent
+  alias __MODULE__.{Card, Registry, Storage}
 
-  alias __MODULE__.Card
-
-  @name __MODULE__
   @pubsub LiveRetroWeb.Endpoint
 
-  def start_link(_) do
-    Agent.start_link(fn -> %{} end, name: @name)
+  def exists?(board) do
+    match?({:ok, _}, Registry.lookup(board))
   end
 
-  def all_cards do
-    Agent.get(@name, & &1)
+  def new(board) do
+    with {:ok, _} <- Registry.new(board) do
+      :ok
+    end
   end
 
-  def add_or_update_card(%Card{id: id} = card) do
-    @pubsub.broadcast_from(self(), "cards", "add_or_update", card)
+  def all_cards(board) do
+    with {:ok, pid} <- Registry.lookup(board) do
+      Storage.all_cards(pid)
+    end
+  end
 
-    Agent.update(@name, &Map.put(&1, id, card))
+  def add_or_update_card(board, %Card{id: id} = card) do
+    with {:ok, pid} <- Registry.lookup(board) do
+      :ok = Storage.add_or_update_card(pid, card)
+      :ok = @pubsub.broadcast_from(self(), "cards", "add_or_update", card)
+
+      :ok
+    end
   end
 end

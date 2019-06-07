@@ -9,12 +9,12 @@ defmodule LiveRetroWeb.BoardLive do
     LiveRetroWeb.BoardView.render("index.html", assigns)
   end
 
-  def mount(_, socket) do
+  def mount(board, socket) do
     if connected?(socket), do: LiveRetroWeb.Endpoint.subscribe("cards")
 
-    cards = Board.all_cards()
+    cards = Board.all_cards(board)
 
-    {:ok, assign(socket, cards: cards, create_new_for: nil, editable: nil)}
+    {:ok, assign(socket, board: board, cards: cards, create_new_for: nil, editable: nil)}
   end
 
   def handle_event("add", type, socket) do
@@ -24,13 +24,14 @@ defmodule LiveRetroWeb.BoardLive do
   end
 
   def handle_event("create", %{"text" => text, "type" => type}, socket) do
+    board = socket.assigns[:board]
     type = String.to_existing_atom(type)
     card = Card.new(text: text, type: type)
 
     socket =
       socket
       |> assign(:create_new_for, nil)
-      |> update(:cards, &add_card(&1, card))
+      |> update(:cards, &add_card(board, &1, card))
 
     {:noreply, socket}
   end
@@ -40,28 +41,29 @@ defmodule LiveRetroWeb.BoardLive do
   end
 
   def handle_event("update", %{"id" => id, "text" => text}, socket) do
+    board = socket.assigns[:board]
+
     socket =
       socket
       |> assign(:editable, nil)
-      |> update(:cards, &update_card(&1, id, text))
+      |> update(:cards, &update_card(board, &1, id, text))
 
     {:noreply, socket}
   end
 
-  defp add_card(cards, %{id: id} = card) do
+  defp add_card(board, cards, %{id: id} = card) do
     cards = Map.put(cards, id, card)
 
-    Board.add_or_update_card(card)
+    :ok = Board.add_or_update_card(board, card)
 
     cards
   end
 
-  defp update_card(cards, id, text) do
+  defp update_card(board, cards, id, text) do
     cards = Map.update!(cards, id, &%{&1 | text: text})
+    card = Map.get(cards, id)
 
-    cards
-    |> Map.get(id)
-    |> Board.add_or_update_card()
+    :ok = Board.add_or_update_card(board, card)
 
     cards
   end
