@@ -1,0 +1,20 @@
+<div class="row">
+  <%= for column_type <- column_types() do %>
+    <section>
+      <div class="col s4">
+        <h5><%= title_for(column_type) %></h5>
+
+        <a class="btn waves-effect waves-light <%= color_for(column_type) %>"
+           style="width: 100%"
+           phx-click="add"
+           phx-value="<%= column_type %>">
+          Add Card
+        </a>
+
+        <%= for card <- cards_for(column_type, from: @cards_by_type) do %>
+          <%= live_render(@socket, LiveRetroWeb.CardLive, session: card) %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>

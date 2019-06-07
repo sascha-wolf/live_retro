@@ -1,0 +1,13 @@
+<item>
+  <div class="card <%= color_for(@type) %> darken-1">
+    <div class="card-content white-text">
+      <%= @text %>
+    </div>
+
+    <div class="card-action">
+      <a href="#" phx-click="edit" phx-value="<%= @id %>">
+        Edit
+      </a>
+    </div>
+  </div>
+</item>
