@@ -10,7 +10,7 @@ defmodule LiveRetroWeb.BoardLive do
   end
 
   def mount(board, socket) do
-    if connected?(socket), do: LiveRetroWeb.Endpoint.subscribe("cards")
+    if connected?(socket), do: LiveRetroWeb.Endpoint.subscribe("board-#{board}")
 
     cards = Board.all_cards(board)
 

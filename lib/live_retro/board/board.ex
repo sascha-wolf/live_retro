@@ -26,10 +26,10 @@ defmodule LiveRetro.Board do
     end
   end
 
-  def add_or_update_card(board, %Card{id: id} = card) do
+  def add_or_update_card(board, %Card{} = card) do
     with {:ok, pid} <- Registry.lookup(board) do
       :ok = Storage.add_or_update_card(pid, card)
-      :ok = @pubsub.broadcast_from(self(), "cards", "add_or_update", card)
+      :ok = @pubsub.broadcast_from(self(), "board-#{board}", "add_or_update", card)
 
       :ok
     end
