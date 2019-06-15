@@ -19,9 +19,10 @@ secret_key_base =
 config :live_retro, LiveRetroWeb.Endpoint,
   url: [
     scheme: "https",
-    host: "live-retro",
-    port: 80
+    host: {:system, "HOST"},
+    port: {:system, "PORT"}
   ],
+  http: [port: {:system, "PORT"}],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: secret_key_base
