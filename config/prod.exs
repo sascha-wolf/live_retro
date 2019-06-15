@@ -7,6 +7,13 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
+live_view_signing_salt =
+  System.get_env("LIVE_VIEW_SIGNING_SALT") ||
+    raise """
+    environment variable SECRET_KEY_BASE is missing.
+    You can generate one by calling: mix phx.gen.secret
+    """
+
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.
@@ -17,14 +24,11 @@ secret_key_base =
 # which you should run after static files are built and
 # before starting your production server.
 config :live_retro, LiveRetroWeb.Endpoint,
-  url: [
-    scheme: "https",
-    host: {:system, "HOST"},
-    port: {:system, "PORT"}
-  ],
+  url: [scheme: "https", host: {:system, "HOST"}, port: 443],
   http: [port: {:system, "PORT"}],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
+  live_view: [signing_salt: live_view_signing_salt],
   secret_key_base: secret_key_base
 
 # Do not print debug messages in production
