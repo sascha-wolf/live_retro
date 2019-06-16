@@ -1,7 +1,7 @@
 <div class="row">
   <%= for column <- as_columns(@cards) do %>
     <section>
-      <div class="col s4">
+      <div class="card-column col l4 s12">
         <h5><%= column[:title] %></h5>
 
         <a class="btn waves-effect waves-light <%= column[:color] %>"
