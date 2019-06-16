@@ -1,8 +1,7 @@
 /* This file is for your main application css. */
 
-@import "./materialize.min.css";
+@import "./materialize";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
-
 
 .phx-logo-text {
     font-size: 1.3rem !important;
