@@ -3,6 +3,12 @@ defmodule LiveRetro.Board do
 
   @pubsub LiveRetroWeb.Endpoint
 
+  def subscribe(board) do
+    with {:ok, _} <- Registry.lookup(board) do
+      @pubsub.subscribe("board-#{board}")
+    end
+  end
+
   def exists?(board) do
     match?({:ok, _}, Registry.lookup(board))
   end
@@ -29,9 +35,22 @@ defmodule LiveRetro.Board do
   def add_or_update_card(board, %Card{} = card) do
     with {:ok, pid} <- Registry.lookup(board) do
       :ok = Storage.add_or_update_card(pid, card)
-      :ok = @pubsub.broadcast_from(self(), "board-#{board}", "add_or_update", card)
+      :ok = broadcast(board, "add_or_update", card)
 
       :ok
     end
+  end
+
+  def delete_card(board, %Card{} = card) do
+    with {:ok, pid} <- Registry.lookup(board) do
+      :ok = Storage.delete_card(pid, card)
+      :ok = broadcast(board, "delete", card)
+
+      :ok
+    end
+  end
+
+  defp broadcast(board, event, payload) do
+    @pubsub.broadcast_from(self(), "board-#{board}", event, payload)
   end
 end

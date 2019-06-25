@@ -10,7 +10,7 @@ defmodule LiveRetroWeb.BoardLive do
   end
 
   def mount(board, socket) do
-    if connected?(socket), do: LiveRetroWeb.Endpoint.subscribe("board-#{board}")
+    if connected?(socket), do: Board.subscribe(board)
 
     cards = Board.all_cards(board)
 
@@ -53,6 +53,17 @@ defmodule LiveRetroWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("delete", id, socket) do
+    board = socket.assigns[:board]
+
+    socket =
+      socket
+      |> assign(:editable, nil)
+      |> update(:cards, &delete_card(board, &1, id))
+
+    {:noreply, socket}
+  end
+
   defp add_card(board, cards, %{id: id} = card) do
     cards = Map.put(cards, id, card)
 
@@ -70,12 +81,26 @@ defmodule LiveRetroWeb.BoardLive do
     cards
   end
 
-  def handle_info(%Broadcast{event: "add_or_update", payload: card}, socket) do
-    socket =
-      update(socket, :cards, fn cards ->
-        Map.put(cards, card.id, card)
-      end)
+  defp delete_card(board, cards, id) do
+    {card, cards} = Map.pop(cards, id)
 
-    {:noreply, socket}
+    :ok = Board.delete_card(board, card)
+
+    cards
+  end
+
+  def handle_info(%Broadcast{event: "add_or_update", payload: card}, socket) do
+    {:noreply, update(socket, :cards, &Map.put(&1, card.id, card))}
+  end
+
+  def handle_info(%Broadcast{event: "delete", payload: %{id: id}}, socket) do
+    socket =
+      if socket.assigns[:editable] == id do
+        assign(socket, :editable, nil)
+      else
+        socket
+      end
+
+    {:noreply, update(socket, :cards, &Map.delete(&1, id))}
   end
 end

@@ -10,8 +10,24 @@
 
 .phx-logo {
     height: 100%;
+
+    img {
+      height: 90%;
+      margin-top: 4px;
+    }
 }
-.phx-logo img {
-    height: 90%;
-    margin-top: 4px;
+
+.card {
+  position: relative;
+
+  .delete {
+    color: #fff;
+    text-align: center;
+    height: 2em;
+    width: 2em;
+
+    position: absolute;
+    right: 0;
+    top: 2px;
+  }
 }

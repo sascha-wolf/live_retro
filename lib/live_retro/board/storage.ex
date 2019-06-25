@@ -12,4 +12,8 @@ defmodule LiveRetro.Board.Storage do
   def add_or_update_card(agent, %{id: id} = card) do
     Agent.update(agent, &Map.put(&1, id, card))
   end
+
+  def delete_card(agent, %{id: id}) do
+    Agent.update(agent, &Map.delete(&1, id))
+  end
 end
