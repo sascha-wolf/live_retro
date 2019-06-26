@@ -2,7 +2,7 @@
   <%= for column <- as_columns(@cards) do %>
     <section>
       <div class="card-column col l4 offset-m2 m8 s12">
-        <h5><a phx-click="boom"><%= column[:title] %></a></h5>
+        <h5><%= column[:title] %> <a phx-click="boom"><%= column[:emoji] %></a></h5>
 
         <a class="btn waves-effect waves-light <%= column[:color] %>"
            style="width: 100%"

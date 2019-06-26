@@ -14,6 +14,7 @@ defmodule LiveRetroWeb.BoardView do
     for type <- @column_types do
       %{
         color: color_for(type),
+        emoji: emoji_for(type),
         title: title_for(type),
         type: type,
         cards: grouped[type] || []
@@ -25,9 +26,13 @@ defmodule LiveRetroWeb.BoardView do
   defp color_for(:bad), do: "red"
   defp color_for(:action), do: "blue"
 
-  defp title_for(:good), do: "Went good 👍"
-  defp title_for(:bad), do: "To improve 😩"
-  defp title_for(:action), do: "Actions 😎"
+  defp title_for(:good), do: "Went good"
+  defp title_for(:bad), do: "To improve"
+  defp title_for(:action), do: "Actions"
+
+  defp emoji_for(:good), do: "👍"
+  defp emoji_for(:bad), do: "😩"
+  defp emoji_for(:action), do: "😎"
 
   defp create_new?(nil, _column), do: false
   defp create_new?(expected, %{type: type}), do: type == expected
